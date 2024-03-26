@@ -4,18 +4,25 @@
 
 ## Introduction
 
-This program simulates a simple blender controller. It allows users to turn the blender on/off and adjust its speed.
+## States:
+- **OFF**: The initial state of the blender when it's turned off.
+- **ON**: The state when the blender is turned on.
+
+## Transitions:
+- **OFF -> ON**: Transition from the OFF state to the ON state occurs when the user inputs the command "on".
+- **ON -> OFF**: Transition from the ON state to the OFF state occurs when the user inputs the command "off".
+- **ON -> ON (Speed Change)**: Transition within the ON state occurs when the user inputs the command "speed [X]", where X is a value between 1 and 4. The speed of the blender is changed accordingly.
 
 ## Requirements
 
-- Node.js installed on your system.
+- Node.js
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-repo/blender-controller.git`
-2. Navigate to the project directory: `cd blender-controller`
+1. Clone the repository: `git clone [https://github.com//blender-controller.git](https://github.com/kenanAST/blender-sequential-FSM.git)`
+2. Navigate to the project directory: `cd blender-sequential`
 3. Install dependencies: `npm install`
-4. Run the program: `node index.js`
+4. Run the program: `node main.js`
 
 ## Usage
 
