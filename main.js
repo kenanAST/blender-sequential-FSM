@@ -20,7 +20,7 @@ const displayBlenderState = () => {
   console.log('Blender State: ', blender_state);
 };
 
-const validateCommand = (command) => {
+const validateCommand = (command, blender_state) => {
   //Speed: To make a command valid the blender should be turned on and it should have one argument. The argument should be (1to4)
   let preparatoryCommand = command.split(' ')[0];
   if (preparatoryCommand === 'speed') {
@@ -60,7 +60,7 @@ while (program_run) {
   let command = prompt('Command: ');
 
   //Checks if the command is valid
-  if (!validateCommand(command)) {
+  if (!validateCommand(command, blender_state)) {
     continue;
   }
 
