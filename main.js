@@ -1,14 +1,5 @@
 const prompt = require('prompt-sync')();
 
-blender_state = {
-  isOn: false,
-  speed: 0,
-};
-
-program_run = true;
-
-commands = ['on', 'off', 'speed [X] // X is values (1 to 4)'];
-
 const displayCommands = (commands) => {
   console.log('Current Available Commands: ');
   commands.map((command, index) => {
@@ -20,7 +11,7 @@ const displayBlenderState = (blender_state) => {
   console.log('Blender State: ', blender_state);
 };
 
-const validateSpeedCommand = (command, blender_state) => {
+const validateSpeedCommand = (command, blender_state, commands) => {
   const speed = parseInt(command.split(' ')[1]);
   if (blender_state.isOn === false) {
     console.log('Blender is current turned off. Turn it on first');
@@ -51,14 +42,18 @@ const validateOffCommand = (blender_state) => {
   return true;
 };
 
-const validateCommand = (command, blender_state) => {
+const validateQuitCommand = (command) => {
+  return command.split(' ').length !== 1 ? false : true;
+};
+
+const validateCommand = (command, blender_state, commands) => {
   //Speed: To make a command valid the blender should be turned on and it should have one argument. The argument should be (1to4)
   let preparatoryCommand = command.split(' ')[0];
-  isCommandValid = true;
+  let isCommandValid = false;
 
   switch (preparatoryCommand) {
     case 'speed':
-      isCommandValid = validateSpeedCommand(command, blender_state);
+      isCommandValid = validateSpeedCommand(command, blender_state, commands);
       break;
     case 'on':
       isCommandValid = validateOnCommand(blender_state);
@@ -66,25 +61,20 @@ const validateCommand = (command, blender_state) => {
     case 'off':
       isCommandValid = validateOffCommand(blender_state);
       break;
+    case 'quit':
+      isCommandValid = validateQuitCommand(command);
+      break;
+    default:
+      console.log('Command Invalid');
   }
   return isCommandValid;
 };
 
-displayCommands(commands);
-
-while (program_run) {
-  displayBlenderState(blender_state);
-  let command = prompt('Command: ');
-
-  //Checks if the command is valid
-  if (!validateCommand(command, blender_state)) {
-    continue;
-  }
-
+const updateState = (command, blender_state) => {
   let preparatoryCommand = command.split(' ')[0];
   switch (preparatoryCommand) {
     case 'speed':
-      speed = command.split(' ')[1];
+      const speed = command.split(' ')[1];
       blender_state.speed = parseInt(speed);
       break;
     case 'on':
@@ -95,10 +85,44 @@ while (program_run) {
       blender_state.isOn = false;
       blender_state.speed = 0;
       break;
+    case 'quit':
+      blender_state.isOn = false;
+      blender_state.speed = 0;
+      break;
     default:
       console.log('Invalid Command');
       break;
   }
-}
+};
 
-console.log('Program Ended');
+const isQuitProgram = (command) => {
+  return command === 'quit' ? false : true;
+};
+
+const main = () => {
+  const blender_state = {
+    isOn: false,
+    speed: 0,
+  };
+
+  let program_run = true;
+
+  const commands = ['on', 'off', 'speed [X] // X is values (1 to 4)', 'quit'];
+
+  displayCommands(commands);
+
+  while (program_run) {
+    displayBlenderState(blender_state);
+    let command = prompt('Command: ');
+
+    //Checks if the command is valid
+    if (validateCommand(command, blender_state, commands)) {
+      program_run = isQuitProgram(command);
+      updateState(command, blender_state);
+    }
+  }
+
+  console.log('Program Ended');
+};
+
+main();
